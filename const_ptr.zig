@@ -67,3 +67,29 @@ test "global const cgp_gv.* mutation should modify gv." {
     assert(&gv == cgp_gv);
     assert(gv == 12345);
 }
+
+test "test const cgp_gv.* changed." {
+    assert(cgp_gv.* == 12345);
+    gv = 1234;
+    assert(&gv == cgp_gv);
+    assert(cgp_gv.* == 1234);
+}
+
+test "gv mutation via cgp_gv.*" {
+    assert(cgp_gv.* == 1234);
+    cgp_gv.* = 12345;
+    assert(&gv == cgp_gv);
+    assert(gv == 12345);
+    assert(cgp_gv.* == gv);
+    assert(cgp_gv.* == 12345);
+}
+
+test "gv mutation via clp_gv.*" {
+    const clp_gv: *u64 = &gv;
+
+    assert(cgp_gv.* == 12345);
+    clp_gv.* = 123456;
+    assert(gv == 123456);
+    assert(clp_gv.* == gv);
+    assert(clp_gv.* == 123456);
+}
